@@ -1,4 +1,13 @@
 *.txt
 *.swp
+
+# --- C / C++ (OSN Prep) ---
 *.o
 *.out
+*.app
+*.exe
+# Folder hasil build jika kamu pakai CMake/Make
+build/
+bin/
+debug/
+release/
