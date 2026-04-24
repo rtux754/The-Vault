@@ -146,6 +146,7 @@ void saveAs(Kontak *head) {
 }
 
 int main() {
+	cout << "\033[2J\033[3J\033[1;1H"; // ini untuk membersihkan layar agar tampilan menjadi enak
 	Kontak *head = nullptr; // dimulai dengan kosong
 	char inputNama[30];
 	char inputHP[15];
@@ -167,6 +168,7 @@ int main() {
 			}
 	// coba 2 kontak dulu
 	do{
+		cout << "\033[2J\033[3J\033[1;1H";
 		cout << "\nMasukkan nama kontak ke-" << nomorUrut << ": ";
 		cin.getline(inputNama, 30); // membaca spasi juga
 		
@@ -188,6 +190,7 @@ int main() {
 		
 	} while (tambahLagi == 'Y' || tambahLagi == 'y');
 	
+	cout << "\033[2J\033[3J\033[1;1H";
 	cout << "[SISTEM] Loop input selesai, bersiap menampilkan data..." << endl; // JEBAKAN 2
 	
 	cout << "\n=== ISI BRANKAS SAAT INI ===" << endl;
@@ -210,8 +213,9 @@ int main() {
 		
 		// jalankan fungsi penghapus
 		hapusKontak(head, targetHapus);
-		
+		save(head);
 		// tampilkan isi brankas
+		cout << "\033[2J\033[3J\033[1;1H";
 		tampilkanKontak(head);
     } else {
 		cout << "[SISTEM] Penghapusan dibatalkan. Melanjutkan program..." << endl;
@@ -223,7 +227,8 @@ int main() {
 	} else if (modeMasuk == 'T' || modeMasuk == 't') {
 			save(head);
 		}
-
+	
+	cout << "\033[2J\033[3J\033[1;1H";
     kosongkanBrankas(head);
     cout << "[SISTEM] RAM dibersihkan. Program ditutup." << endl;
     
