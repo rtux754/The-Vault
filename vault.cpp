@@ -3,6 +3,8 @@
 #include <fstream>
 using namespace std;
 
+//#define KUNCI '7';
+
 struct Kontak {
 	char nama[30];
 	char nomerHP[15];
@@ -11,9 +13,13 @@ struct Kontak {
 
 void tambahkontak(Kontak *&head, const char *namaBaru, const char *nomorBaru);
 void tampilkanKontak(Kontak *head);
-void simpanKeFile(Kontak *head);
+//void pengacak(char teks[]);
+void save(Kontak *head);
+void saveAs(Kontak *head);
 void hapusKontak(Kontak *&head, const char *namaDiHapus);
+void kosongkanBrankas(Kontak *&head);
 
+// MENAMPILKAN KONTAK
 void tampilkanKontak(Kontak *head) {
 	Kontak *jalan = head;
 	while (jalan != nullptr) {
@@ -24,6 +30,14 @@ void tampilkanKontak(Kontak *head) {
 	}
 }
 
+// PENGACAK PESAN
+void pengacak(char teks[]) {
+	for (int i = 0; i != '\0'; i++) {
+		teks[i] = teks[i] ^ KUNCI;
+	}
+}
+
+// FUNGSI APPEND : MENAMBAHKAN NODE BARU DI UJUNG LINKED LIST
 void tambahkontak(Kontak *&head, const char *namaBaru, const char *nomorBaru) {
 	// ciptakan memori baru untuk kontak baru
 	Kontak *baru = new Kontak;
@@ -48,6 +62,7 @@ void tambahkontak(Kontak *&head, const char *namaBaru, const char *nomorBaru) {
 	}
 }
 
+// FUNGSI DELETE : UNTUK MENGHAPUS NODE SPESIFIK BERDASARKAN PENCARIAN STRING
 void hapusKontak(Kontak *&head, const char *namaDiHapus) {
 	// jika brankas masih kosong
 	if (head == nullptr) {
@@ -80,10 +95,23 @@ void hapusKontak(Kontak *&head, const char *namaDiHapus) {
 	cout << "[ERROR] Kontak bernama '" << namaDiHapus << "' tidak ditemukan di brankas." << endl;
 }
 
-void simpanKeFile(Kontak *head) {
-	// membuat atau membuka file .txt
-	ofstream fileBuku("DataVault.txt");
+// GARBAGE COLLECTOR MANUAL AGAR TIDAK MENIMBULKAN MEMORY LEAK
+void kosongkanBrankas(Kontak *&head) {
+    
+    Kontak *temp;
+    while (head != nullptr) {
+		temp = head;
+		head = head->next;
+		delete temp;
+	}
+	head = nullptr;
+}
+
+// FUNGSI FILE I/O (Overwrite): MENYIMPAN DATA DENGAN MENIMPA ULANG FILE
+void save(Kontak *head) {
 	
+	ofstream fileBuku("DataVault.txt"); // mode default akan mereset isi file
+		
 	if (!fileBuku.is_open()) {
 		cout << "[ERROR] gagal membuka file untuk menyimpan data!" << endl;
 		return;
@@ -93,6 +121,32 @@ void simpanKeFile(Kontak *head) {
 	// tulis data satu per satu
 	while (jalan != nullptr) {
 		// format penulisan memisahkan koma atau baris baru
+		//pengacak(); // pengacak pesan
+		fileBuku << jalan->nama << endl;
+		fileBuku << jalan->nomerHP << endl;
+
+		jalan = jalan -> next;
+	}
+
+	fileBuku.close();
+	cout << "[SISTEM] Data berhasil diamankan ke dalam SSD (DataVault.txt)." << endl;
+}
+
+// FUNGSI FILE I/O (APPEND) : UNTUK MENYIMPAN DATA DENGAN MENAMBAHKAN KEBELAKANG FILE
+void saveAs(Kontak *head) {
+	
+	ofstream fileBuku("DataVault.txt", ios::app); // bendera ios untuk mode append
+	
+	if (!fileBuku.is_open()) {
+		cout << "[ERROR] gagal membuka file untuk menyimpan data!" << endl;
+		return;
+	}
+
+	Kontak *jalan = head;
+	// tulis data satu per satu
+	while (jalan != nullptr) {
+		// tulis data dari ram sampai ujung bawah file ssd
+		//pengacak(jalan); // pengacak
 		fileBuku << jalan->nama << endl;
 		fileBuku << jalan->nomerHP << endl;
 
@@ -104,16 +158,29 @@ void simpanKeFile(Kontak *head) {
 }
 
 int main() {
+	cout << "\033[2J\033[3J\033[1;1H"; // ini untuk membersihkan layar agar tampilan menjadi enak
 	Kontak *head = nullptr; // dimulai dengan kosong
 	char inputNama[30];
 	char inputHP[15];
+	char modeMasuk;
 	char tambahLagi;
 	int nomorUrut = 1;
 	
 	cout << "=== WELCOME TO THE VAULT ===" << endl;
 	
+	cout << "Pilih Mode: Tambah ke daftar yang ada(A) atau Timpa seluruh daftar(T)?:";
+	cin >> modeMasuk;
+	cin.ignore(10000, '\n');
+	
+	if (modeMasuk == 'A' || modeMasuk == 'a') {
+		// tidak perlu melakukan apa-apa
+		} else if (modeMasuk == 'T' || modeMasuk == 't'){
+				kosongkanBrankas(head);
+				cout << "[SISTEM] Brankas lama telah dihancurkan. Siap menimpa dengan data baru." << endl;
+			}
 	// coba 2 kontak dulu
 	do{
+		cout << "\033[2J\033[3J\033[1;1H";
 		cout << "\nMasukkan nama kontak ke-" << nomorUrut << ": ";
 		cin.getline(inputNama, 30); // membaca spasi juga
 		
@@ -135,6 +202,7 @@ int main() {
 		
 	} while (tambahLagi == 'Y' || tambahLagi == 'y');
 	
+	cout << "\033[2J\033[3J\033[1;1H";
 	cout << "[SISTEM] Loop input selesai, bersiap menampilkan data..." << endl; // JEBAKAN 2
 	
 	cout << "\n=== ISI BRANKAS SAAT INI ===" << endl;
@@ -157,22 +225,27 @@ int main() {
 		
 		// jalankan fungsi penghapus
 		hapusKontak(head, targetHapus);
-		
+		save(head);
+		//pengacak(head);
 		// tampilkan isi brankas
+		cout << "\033[2J\033[3J\033[1;1H";
 		tampilkanKontak(head);
     } else {
 		cout << "[SISTEM] Penghapusan dibatalkan. Melanjutkan program..." << endl;
 	}
 	cout << "\n=== PROSES PENGARSIPAN ===";
-	simpanKeFile(head); // tulis ke file
-
-    // MEMBERSIHKAN RAM
-    Kontak *temp;
-    while (head != nullptr) {
-		temp = head;
-		head = head->next;
-		delete temp;
-	}
-	cout << "[SISTEM] RAM dibersihkan. Program ditutup." << endl; // JEBAKAN 4
+	// mengecek untuk memanggil fungsi yang benar
+	if (modeMasuk == 'A' || modeMasuk == 'a') {
+		saveAs(head);
+		//pengacak(head);
+	} else if (modeMasuk == 'T' || modeMasuk == 't') {
+			save(head);
+			//pengacak(head);
+		}
+	
+	cout << "\033[2J\033[3J\033[1;1H";
+    kosongkanBrankas(head);
+    cout << "[SISTEM] RAM dibersihkan. Program ditutup." << endl;
+    
 	return 0;
 }
