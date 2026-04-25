@@ -99,9 +99,12 @@ void kosongkanBrankas(Kontak *&head) {
 }
 
 void enkripsi(char teks[]) {
-	char kunci = '7';
-	for (int i = 0; i != '\0'; i++) {
+	char kunci = 'F';
+	int i = 0;
+	
+	while (teks[i] != '\0') {
 		teks[i] = teks[i] ^ kunci;
+		i++;
 	}
 }
 
@@ -118,10 +121,18 @@ void save(Kontak *head) {
 	Kontak *jalan = head;
 	// tulis data satu per satu
 	while (jalan != nullptr) {
+		// proses acak data
+		enkripsi(jalan->nama);
+		enkripsi(jalan->nomerHP);
+		
 		// format penulisan memisahkan koma atau baris baru
 		fileBuku << jalan->nama << endl;
 		fileBuku << jalan->nomerHP << endl;
 
+		// kembalikan data ke ram
+		enkripsi(jalan->nama);
+		enkripsi(jalan->nomerHP);
+		
 		jalan = jalan -> next;
 	}
 
@@ -142,11 +153,19 @@ void saveAs(Kontak *head) {
 	Kontak *jalan = head;
 	// tulis data satu per satu
 	while (jalan != nullptr) {
+		
+		// proses acak data
+		enkripsi(jalan->nama);
+		enkripsi(jalan->nomerHP);
+		
 		// tulis data dari ram sampai ujung bawah file ssd
-		enkripsi();
 		fileBuku << jalan->nama << endl;
 		fileBuku << jalan->nomerHP << endl;
 
+		// kembali data ke ram
+		enkripsi(jalan->nama);
+		enkripsi(jalan->nomerHP);
+		
 		jalan = jalan -> next;
 	}
 
