@@ -111,10 +111,10 @@ void load (Kontak *&head) {
 	Kontak *jalan = head;
 	char bufferNama[30];
 	char bufferNomor[15];
-	while(jalan != nullptr) {
-		cin.getline(bufferNama, sizeof(bufferNama));
-		cin.ignore(10000, '\n');
-		cin.getline(bufferNomor, sizeof(bufferNomor));
+	while(fileBuku.getline(bufferNama, sizeof(bufferNama))) {
+		fileBuku.getline(bufferNomor, sizeof(bufferNomor));
+		enkripsi(bufferNama);
+		enkripsi(bufferNomor);
 	}
 	cout << "[SISTEM] Data berhasil di load." << endl;
 }
