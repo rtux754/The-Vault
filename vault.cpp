@@ -104,7 +104,7 @@ void load (Kontak *&head) {
 	ifstream fileBuku("DataVault.txt");
 	
 	if (!fileBuku.is_open()) {
-		cout << "[ERROR] gagal membuka file untuk menyimpan data!" << endl;
+		cout << "[ERROR] gagal membuka file untuk membaca data!" << endl;
 		return;
 	}
 	
