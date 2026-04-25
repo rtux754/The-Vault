@@ -3,8 +3,6 @@
 #include <fstream>
 using namespace std;
 
-//#define KUNCI '7';
-
 struct Kontak {
 	char nama[30];
 	char nomerHP[15];
@@ -13,9 +11,9 @@ struct Kontak {
 
 void tambahkontak(Kontak *&head, const char *namaBaru, const char *nomorBaru);
 void tampilkanKontak(Kontak *head);
-//void pengacak(char teks[]);
 void save(Kontak *head);
 void saveAs(Kontak *head);
+void enkripsi(char teks[]);
 void hapusKontak(Kontak *&head, const char *namaDiHapus);
 void kosongkanBrankas(Kontak *&head);
 
@@ -27,13 +25,6 @@ void tampilkanKontak(Kontak *head) {
         cout << "No HP : " << jalan->nomerHP << endl;
         cout << "----------------------" << endl;
         jalan = jalan->next;
-	}
-}
-
-// PENGACAK PESAN
-void pengacak(char teks[]) {
-	for (int i = 0; i != '\0'; i++) {
-		teks[i] = teks[i] ^ KUNCI;
 	}
 }
 
@@ -107,6 +98,13 @@ void kosongkanBrankas(Kontak *&head) {
 	head = nullptr;
 }
 
+void enkripsi(char teks[]) {
+	char kunci = '7';
+	for (int i = 0; i != '\0'; i++) {
+		teks[i] = teks[i] ^ kunci;
+	}
+}
+
 // FUNGSI FILE I/O (Overwrite): MENYIMPAN DATA DENGAN MENIMPA ULANG FILE
 void save(Kontak *head) {
 	
@@ -121,7 +119,6 @@ void save(Kontak *head) {
 	// tulis data satu per satu
 	while (jalan != nullptr) {
 		// format penulisan memisahkan koma atau baris baru
-		//pengacak(); // pengacak pesan
 		fileBuku << jalan->nama << endl;
 		fileBuku << jalan->nomerHP << endl;
 
@@ -146,7 +143,7 @@ void saveAs(Kontak *head) {
 	// tulis data satu per satu
 	while (jalan != nullptr) {
 		// tulis data dari ram sampai ujung bawah file ssd
-		//pengacak(jalan); // pengacak
+		enkripsi();
 		fileBuku << jalan->nama << endl;
 		fileBuku << jalan->nomerHP << endl;
 
@@ -160,6 +157,7 @@ void saveAs(Kontak *head) {
 int main() {
 	cout << "\033[2J\033[3J\033[1;1H"; // ini untuk membersihkan layar agar tampilan menjadi enak
 	Kontak *head = nullptr; // dimulai dengan kosong
+	char keluar;
 	char inputNama[30];
 	char inputHP[15];
 	char modeMasuk;
@@ -226,7 +224,6 @@ int main() {
 		// jalankan fungsi penghapus
 		hapusKontak(head, targetHapus);
 		save(head);
-		//pengacak(head);
 		// tampilkan isi brankas
 		cout << "\033[2J\033[3J\033[1;1H";
 		tampilkanKontak(head);
@@ -237,13 +234,14 @@ int main() {
 	// mengecek untuk memanggil fungsi yang benar
 	if (modeMasuk == 'A' || modeMasuk == 'a') {
 		saveAs(head);
-		//pengacak(head);
 	} else if (modeMasuk == 'T' || modeMasuk == 't') {
 			save(head);
-			//pengacak(head);
 		}
 	
-	cout << "\033[2J\033[3J\033[1;1H";
+	cin.ignore(10000, '\n');
+	
+	cout << "Program selesai. Tekan enter untuk keluar...";
+	cin.get();
     kosongkanBrankas(head);
     cout << "[SISTEM] RAM dibersihkan. Program ditutup." << endl;
     
