@@ -1,2 +1,2 @@
 # The-Vault
-This is app tiny project mine, the name of app is The Vault
+This is app my small project, the name of the app is The Vault.
