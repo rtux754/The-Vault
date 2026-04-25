@@ -6,6 +6,7 @@
 *.out
 *.app
 *.exe
+brankas
 # Folder hasil build jika kamu pakai CMake/Make
 build/
 bin/
