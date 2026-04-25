@@ -14,6 +14,7 @@ void tampilkanKontak(Kontak *head);
 void save(Kontak *head);
 void saveAs(Kontak *head);
 void enkripsi(char teks[]);
+void load(Kontak *&head);
 void hapusKontak(Kontak *&head, const char *namaDiHapus);
 void kosongkanBrankas(Kontak *&head);
 
@@ -98,6 +99,27 @@ void kosongkanBrankas(Kontak *&head) {
 	head = nullptr;
 }
 
+// FITUR LOAD UNTUK MEMBACA DATA DARI SSD KEMBALI KEDALAM RAM
+void load (Kontak *&head) {
+	ifstream fileBuku("DataVault.txt");
+	
+	if (!fileBuku.is_open()) {
+		cout << "[ERROR] gagal membuka file untuk menyimpan data!" << endl;
+		return;
+	}
+	
+	Kontak *jalan = head;
+	char bufferNama[30];
+	char bufferNomor[15];
+	while(jalan != nullptr) {
+		cin.getline(bufferNama, sizeof(bufferNama));
+		cin.ignore(10000, '\n');
+		cin.getline(bufferNomor, sizeof(bufferNomor));
+	}
+	cout << "[SISTEM] Data berhasil di load." << endl;
+}
+
+// FITUR ENKRIPSI AGAR DATA YANG DISIMPAN HANYA BISA DIBACA OLEH KOMPUTER
 void enkripsi(char teks[]) {
 	char kunci = 'F';
 	int i = 0;
@@ -176,6 +198,7 @@ void saveAs(Kontak *head) {
 int main() {
 	cout << "\033[2J\033[3J\033[1;1H"; // ini untuk membersihkan layar agar tampilan menjadi enak
 	Kontak *head = nullptr; // dimulai dengan kosong
+	load(head);
 	char keluar;
 	char inputNama[30];
 	char inputHP[15];
@@ -197,7 +220,6 @@ int main() {
 			}
 	// coba 2 kontak dulu
 	do{
-		cout << "\033[2J\033[3J\033[1;1H";
 		cout << "\nMasukkan nama kontak ke-" << nomorUrut << ": ";
 		cin.getline(inputNama, 30); // membaca spasi juga
 		
