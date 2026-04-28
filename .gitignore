@@ -1,6 +1,7 @@
 # ngapain baca ini hah?
 *.txt
 *.swp
+*.jpg
 
 # --- C / C++ (OSN Prep) ---
 *.o
