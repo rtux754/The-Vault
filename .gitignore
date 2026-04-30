@@ -2,6 +2,7 @@
 *.txt
 *.swp
 *.jpg
+.penampung
 
 # --- C / C++ (OSN Prep) ---
 *.o
