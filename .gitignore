@@ -1,8 +1,8 @@
 # ngapain baca ini hah?
-*.txt
 *.swp
 *.jpg
 .penampung
+DataVault.txt
 
 # --- C / C++ (OSN Prep) ---
 *.o
